@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+*.log
+npm-debug.log*
+
+# Environment variables
+# This is crucial for protecting your API keys and other secrets.
+# Your previous push was rejected because a secret was found in a file like this.
+.env
+.env.local
+.env.development
+.env.production
+
+# Mac and Windows temporary files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# IDE files
+.idea/
+.project
+.classpath
+.settings/
+
+# Test-related files
+test.log
+junit.xml
