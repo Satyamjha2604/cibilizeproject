@@ -1,24 +1,32 @@
-# Logs
-logs
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Environment variables
+# This is crucial for protecting your API keys and other secrets.
+# Your previous push was rejected because a secret was found in a file like this.
+.env
+.env.local
+.env.development
+.env.production
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Mac and Windows temporary files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# IDE files
+.idea/
+.project
+.classpath
+.settings/
+
+# Test-related files
+test.log
+junit.xml

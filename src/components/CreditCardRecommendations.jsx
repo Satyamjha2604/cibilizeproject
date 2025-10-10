@@ -170,6 +170,7 @@ const CreditCardRecommendations = () => {
   });
   const [recommendations, setRecommendations] = useState([]);
 
+  // ✅ All images now loaded from public/assets/
   const sampleCreditCards = [
     {
       id: "axis_ace",
@@ -182,8 +183,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["everyday_spending", "cashback", "dining"],
       income: "medium",
       cibil: "good",
-      imageUrl:
-        "https://www.axisbank.com/images/default-source/revamp_new/cards/credit-card/ace-credit-card.png",
+      imageUrl: "/assets/axisace.jpg",
       applyLink:
         "https://www.axisbank.com/retail/cards/credit-card/ace-credit-card",
     },
@@ -198,8 +198,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["travel", "high_spender"],
       income: "high",
       cibil: "excellent",
-      imageUrl:
-        "https://www.hdfcbank.com/content/dam/hdfcbank/Credit_card/Regalia/regalia_credit_card_484x252.jpg",
+      imageUrl: "/assets/hdfcgoldregilacard.jpg",
       applyLink:
         "https://www.hdfcbank.com/personal/pay/cards/credit-cards/regalia",
     },
@@ -214,8 +213,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["travel", "everyday_spending"],
       income: "high",
       cibil: "good",
-      imageUrl:
-        "https://www.sbicard.com/sbi-card-en/assets/media/images/prime-card.png",
+      imageUrl: "/assets/sbiprimecard.jpg",
       applyLink:
         "https://www.sbicard.com/en/personal/credit-cards/rewards/sbi-card-prime.page",
     },
@@ -230,8 +228,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["cashback", "everyday_spending"],
       income: "medium",
       cibil: "good",
-      imageUrl:
-        "https://www.icicibank.com/content/dam/icicibank/india/managed-assets/images/cards/amazon-pay-credit-card.jpg",
+      imageUrl: "/assets/amazonpayicicibankcard.jpg",
       applyLink:
         "https://www.icicibank.com/Personal-Banking/cards/Consumer-Cards/Credit-Card/amazon-pay-credit-card/index.page",
     },
@@ -246,8 +243,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["travel", "luxury", "high_spender"],
       income: "very_high",
       cibil: "excellent",
-      imageUrl:
-        "https://www.icicibank.com/content/dam/icicibank/india/managed-assets/images/cards/sapphiro-credit-card.jpg",
+      imageUrl: "/assets/icicibankcard.jpg",
       applyLink:
         "https://www.icicibank.com/Personal-Banking/cards/Consumer-Cards/Credit-Card/icici-bank-sapphiro-credit-card/index.page",
     },
@@ -262,8 +258,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["cashback", "everyday_spending"],
       income: "medium",
       cibil: "average",
-      imageUrl:
-        "https://www.hdfcbank.com/content/dam/hdfcbank/Credit_card/Moneyback_Plus/moneyback-plus-card-484x252.png",
+      imageUrl: "/assets/hdfcbankcard.jpg",
       applyLink:
         "https://www.hdfcbank.com/personal/pay/cards/credit-cards/moneyback-plus",
     },
@@ -278,8 +273,7 @@ const CreditCardRecommendations = () => {
       idealFor: ["travel", "luxury"],
       income: "very_high",
       cibil: "excellent",
-      imageUrl:
-        "https://www.sbicard.com/sbi-card-en/assets/media/images/elite-card.png",
+      imageUrl: "/assets/sbicard.jpg",
       applyLink:
         "https://www.sbicard.com/en/personal/credit-cards/rewards/sbi-card-elite.page",
     },
@@ -347,7 +341,7 @@ const CreditCardRecommendations = () => {
     }
   };
 
-  // ✅ New weighted scoring system
+  // ✅ Weighted scoring system
   const generateRecommendations = () => {
     const weights = {
       cibil: 0.4,
@@ -360,7 +354,6 @@ const CreditCardRecommendations = () => {
       let score = 0;
       let reasons = [];
 
-      // Spending Habit
       if (
         answers.spendingHabit &&
         card.idealFor.includes(answers.spendingHabit)
@@ -369,7 +362,6 @@ const CreditCardRecommendations = () => {
         reasons.push("Matches your spending habit");
       }
 
-      // Income match
       if (
         (answers.incomeLevel === "low" && card.income === "low") ||
         (answers.incomeLevel === "medium" &&
@@ -383,7 +375,6 @@ const CreditCardRecommendations = () => {
         reasons.push("Suitable for your income level");
       }
 
-      // CIBIL match
       if (
         (answers.cibilScore === "poor" && card.cibil === "poor") ||
         (answers.cibilScore === "average" &&
@@ -397,7 +388,6 @@ const CreditCardRecommendations = () => {
         reasons.push("Good match for your CIBIL score");
       }
 
-      // Benefit match
       if (answers.desiredBenefit) {
         if (
           answers.desiredBenefit === "cashback" &&
@@ -429,7 +419,6 @@ const CreditCardRecommendations = () => {
       return { ...card, score, reasons };
     });
 
-    // Sort by score & pick top 3
     const topCards = scored
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
@@ -510,7 +499,12 @@ const CreditCardRecommendations = () => {
             onClick={() => {
               setRecommendations([]);
               setStep(1);
-              setAnswers({});
+              setAnswers({
+                spendingHabit: null,
+                incomeLevel: null,
+                cibilScore: null,
+                desiredBenefit: null,
+              });
             }}
           >
             Start Over

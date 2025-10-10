@@ -6,28 +6,31 @@ const path = require("path");
 const { initializeDatabase } = require("./db");
 const authRouter = require("./routes/auth");
 const expensesRouter = require("./routes/expenses");
+const geminiRouter = require("./routes/gemini"); // ✅ Correct import
 const multer = require("multer");
 const { authenticateToken } = require("./middleware/auth");
 const pdfParse = require("pdf-parse");
-const { parseBankStatement } = require("./utils/pdfParser"); // Import the new parser function
-const openaiRouter = require("./routes/openai"); // Import the new router
+const { parseBankStatement } = require("./utils/pdfParser"); // ✅ For PDF extraction
 
 const app = express();
 const PORT = 5000;
 
-// Middleware
+// ==================== Middleware ====================
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// ==================== Routes ====================
 app.use("/api/auth", authRouter);
 app.use("/api/expenses", expensesRouter);
-app.use("/api/openai", openaiRouter); // Add the new router here
+app.use("/api/gemini", geminiRouter); // ✅ Gemini route (Credit Score Prediction)
 
-// File upload route (now using memoryStorage)
+// ==================== File Upload (PDF Parsing) ====================
+
+// Use memoryStorage for in-memory file parsing
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+// Parse uploaded PDF and save extracted expenses
 app.post(
   "/api/expenses/upload",
   authenticateToken,
@@ -38,14 +41,14 @@ app.post(
     }
 
     try {
-      // The file is in memory, so it can be read directly
+      // Read PDF buffer directly
       const data = await pdfParse(req.file.buffer);
       const rawText = data.text;
 
-      // Use the new parser function to extract data
+      // Extract expense data from text
       const extractedExpenses = parseBankStatement(rawText);
 
-      // Now, insert the extracted expenses into the database
+      // Insert extracted expenses into the database
       const dbConnection = require("./db").getConnection();
       const userId = req.user.id;
 
@@ -63,26 +66,28 @@ app.post(
       }
 
       console.log(
-        `Successfully parsed and saved ${extractedExpenses.length} expenses from PDF.`
+        `✅ Successfully parsed and saved ${extractedExpenses.length} expenses from PDF.`
       );
 
       res.json({
         message: `Successfully parsed and saved ${extractedExpenses.length} expenses from the PDF!`,
       });
     } catch (err) {
-      console.error("PDF parsing or saving error:", err);
-      res
-        .status(500)
-        .json({ message: "Failed to process PDF.", error: err.message });
+      console.error("❌ PDF parsing or saving error:", err);
+      res.status(500).json({
+        message: "Failed to process PDF.",
+        error: err.message,
+      });
     }
   }
 );
 
-// Start server
+// ==================== Start Server ====================
 async function startServer() {
   await initializeDatabase();
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`🚀 Server is running on http://localhost:${PORT}`);
   });
 }
+
 startServer();

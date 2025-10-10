@@ -13,15 +13,10 @@ import {
   PolarAngleAxis,
 } from "recharts";
 
+// ---------- Styled Components ----------
 const pulse = keyframes`
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0px var(--primary-blue);
-  }
-  100% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-  }
+  0% { transform: scale(1); box-shadow: 0 0 0 0px var(--primary-blue); }
+  100% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
 `;
 
 const DashboardContainer = styled.div`
@@ -54,35 +49,31 @@ const Card = styled.div`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(44, 62, 80, 0.15);
   }
 
   h2 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--dark-text);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-
   p {
     color: var(--light-text);
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-size: 15px;
+    margin-bottom: 18px;
   }
 `;
 
 const CibilScoreCard = styled(Card)`
-  grid-column: 1 / 2;
   min-height: 400px;
   justify-content: center;
 `;
-
 const ScoreVisualizer = styled.div`
   width: 280px;
   height: 280px;
   position: relative;
-
   .score-value {
     position: absolute;
     top: 50%;
@@ -92,13 +83,11 @@ const ScoreVisualizer = styled.div`
     flex-direction: column;
     align-items: center;
     text-align: center;
-
     span {
       font-size: 64px;
       font-weight: 800;
       color: var(--primary-blue);
     }
-
     p {
       font-size: 18px;
       font-weight: 600;
@@ -110,7 +99,6 @@ const ScoreVisualizer = styled.div`
 const SimulatorCard = styled(Card)`
   grid-column: 2 / 3;
 `;
-
 const SimulatorForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -118,12 +106,10 @@ const SimulatorForm = styled.form`
   width: 100%;
   margin-top: 20px;
 `;
-
 const InputGroup = styled.div`
   width: 100%;
   text-align: left;
 `;
-
 const Label = styled.label`
   font-weight: 500;
   font-size: 16px;
@@ -131,7 +117,6 @@ const Label = styled.label`
   margin-bottom: 8px;
   display: block;
 `;
-
 const StyledInput = styled.input`
   padding: 12px;
   border: 1px solid var(--border-color);
@@ -142,13 +127,11 @@ const StyledInput = styled.input`
   width: 100%;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
   &:focus {
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
   }
 `;
-
 const CtaButton = styled.button`
   background: linear-gradient(
     90deg,
@@ -164,12 +147,10 @@ const CtaButton = styled.button`
   box-shadow: 0 4px 15px rgba(0, 123, 255, 0.25);
   transition: all 0.3s ease;
   margin-top: 15px;
-
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
   }
-
   &:disabled {
     background: var(--border-color);
     color: var(--light-text);
@@ -177,7 +158,6 @@ const CtaButton = styled.button`
     box-shadow: none;
   }
 `;
-
 const ResultContainer = styled.div`
   margin-top: 25px;
   padding: 20px;
@@ -188,14 +168,12 @@ const ResultContainer = styled.div`
   text-align: center;
   width: 100%;
 `;
-
 const ResultMessage = styled.p`
   font-size: 18px;
   font-weight: 600;
   color: var(--dark-text);
   margin: 0;
 `;
-
 const ResultScore = styled.span`
   font-size: 40px;
   font-weight: 700;
@@ -203,7 +181,6 @@ const ResultScore = styled.span`
   margin-top: 10px;
   display: block;
 `;
-
 const LoadingSpinner = styled.div`
   width: 40px;
   height: 40px;
@@ -213,7 +190,6 @@ const LoadingSpinner = styled.div`
   animation: ${pulse} 1s infinite;
   margin: 0 auto 15px;
 `;
-
 const HistoryCard = styled(Card)`
   grid-column: 1 / -1;
   margin-top: 20px;
@@ -227,6 +203,7 @@ const scoreColors = {
   "N/A": "#6c757d",
 };
 
+// ---------- Dashboard Component ----------
 const Dashboard = () => {
   const [formData, setFormData] = useState({
     income: "",
@@ -237,18 +214,30 @@ const Dashboard = () => {
   });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [scoreHistory] = useState([
-    { name: "Jan", score: 720 },
-    { name: "Feb", score: 735 },
-    { name: "Mar", score: 740 },
-    { name: "Apr", score: 710 },
-    { name: "May", score: 755 },
-    { name: "Jun", score: 780 },
+  const [scoreHistory, setScoreHistory] = useState([
+    { name: "May", score: 710 },
+    { name: "Jun", score: 740 },
+    { name: "Jul", score: 770 },
+    { name: "Aug", score: 730 },
+    { name: "Sep", score: 780 },
+    { name: "Oct", score: 0 },
   ]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const getScoreCategory = (score) => {
+    if (typeof score !== "number") return "N/A";
+    if (score >= 800) return "Excellent";
+    if (score >= 700) return "Good";
+    if (score >= 600) return "Fair";
+    return "Poor";
+  };
+
+  const getScoreColor = (score) => {
+    if (typeof score !== "number") return scoreColors["N/A"];
+    return scoreColors[getScoreCategory(score)];
   };
 
   const handleSubmit = async (e) => {
@@ -256,36 +245,35 @@ const Dashboard = () => {
     setLoading(true);
     setResult(null);
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setResult({
-        score: "N/A",
-        reason: "Please log in to use the simulator.",
-      });
-      setLoading(false);
-      return;
-    }
-
     try {
-      const response = await fetch("http://localhost:5000/api/openai/predict", {
+      const response = await fetch("http://localhost:5000/api/gemini/predict", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}`);
-      }
-
       const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error("Error with backend:", error);
+
+      if (!response.ok) throw new Error(data.reason || "Backend error");
+
       setResult({
-        score: "N/A",
+        score: typeof data.score === "number" ? data.score : null,
+        reason: data.reason || "",
+      });
+
+      if (typeof data.score === "number") {
+        setScoreHistory((prev) => {
+          const newEntry = {
+            name: new Date().toLocaleString("default", { month: "short" }),
+            score: data.score,
+          };
+          return [...prev.slice(-5), newEntry];
+        });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setResult({
+        score: null,
         reason: "Failed to get prediction. Please try again.",
       });
     } finally {
@@ -293,34 +281,21 @@ const Dashboard = () => {
     }
   };
 
-  const getScoreCategory = (score) => {
-    if (score >= 851) return "Excellent";
-    if (score >= 701) return "Good";
-    if (score >= 551) return "Fair";
-    if (score >= 300) return "Poor";
-    return "N/A";
-  };
-
-  const getScoreColor = (score) => {
-    const category = getScoreCategory(score);
-    return scoreColors[category] || scoreColors["N/A"];
-  };
-
   const scoreData = [
     {
       name: "Score",
-      value: result && result.score !== "N/A" ? (result.score / 900) * 100 : 0,
+      value: result?.score || 300, // default to lower bound
       fill: result ? getScoreColor(result.score) : "#6c757d",
     },
   ];
 
   return (
     <DashboardContainer>
-      {/* CIBIL SCORE VISUALIZER */}
+      {/* CREDIT SCORE VISUALIZER */}
       <CibilScoreCard>
         <h2>Your Predicted Credit Score</h2>
         <ScoreVisualizer>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width={280} height={280}>
             <RadialBarChart
               innerRadius="70%"
               outerRadius="90%"
@@ -330,9 +305,9 @@ const Dashboard = () => {
             >
               <PolarAngleAxis
                 type="number"
-                domain={[0, 100]}
-                angleAxisId={0}
+                domain={[300, 900]}
                 tick={false}
+                angleAxisId={0}
               />
               <RadialBar
                 background={{ fill: "#e0e6ed" }}
@@ -340,23 +315,25 @@ const Dashboard = () => {
                 cornerRadius={100}
               />
             </RadialBarChart>
-          </ResponsiveContainer>
-          <div className="score-value">
-            {loading ? (
-              <LoadingSpinner />
-            ) : result ? (
-              <>
-                <span>{result.score}</span>
-                <p style={{ color: getScoreColor(result.score) }}>
-                  {getScoreCategory(result.score)}
+            <div className="score-value">
+              {loading ? (
+                <LoadingSpinner />
+              ) : result ? (
+                <>
+                  <span>
+                    {typeof result.score === "number" ? result.score : "N/A"}
+                  </span>
+                  <p style={{ color: getScoreColor(result.score) }}>
+                    {getScoreCategory(result.score)}
+                  </p>
+                </>
+              ) : (
+                <p style={{ fontSize: "18px", color: "var(--light-text)" }}>
+                  Enter your details
                 </p>
-              </>
-            ) : (
-              <p style={{ fontSize: "18px", color: "var(--light-text)" }}>
-                Enter your details
-              </p>
-            )}
-          </div>
+              )}
+            </div>
+          </ResponsiveContainer>
         </ScoreVisualizer>
       </CibilScoreCard>
 
@@ -365,61 +342,31 @@ const Dashboard = () => {
         <h2>Credit Score Simulator</h2>
         <p>See how your financial actions can affect your score.</p>
         <SimulatorForm onSubmit={handleSubmit}>
-          <InputGroup>
-            <Label htmlFor="income">Monthly Income (₹)</Label>
-            <StyledInput
-              type="number"
-              id="income"
-              name="income"
-              value={formData.income}
-              onChange={handleChange}
-              required
-            />
-          </InputGroup>
-          <InputGroup>
-            <Label htmlFor="loanAmount">Loan Amount (₹)</Label>
-            <StyledInput
-              type="number"
-              id="loanAmount"
-              name="loanAmount"
-              value={formData.loanAmount}
-              onChange={handleChange}
-              required
-            />
-          </InputGroup>
-          <InputGroup>
-            <Label htmlFor="utilization">Credit Utilization (%)</Label>
-            <StyledInput
-              type="number"
-              id="utilization"
-              name="utilization"
-              value={formData.utilization}
-              onChange={handleChange}
-              required
-            />
-          </InputGroup>
-          <InputGroup>
-            <Label htmlFor="missedEMIs">Missed EMIs</Label>
-            <StyledInput
-              type="number"
-              id="missedEMIs"
-              name="missedEMIs"
-              value={formData.missedEMIs}
-              onChange={handleChange}
-              required
-            />
-          </InputGroup>
-          <InputGroup>
-            <Label htmlFor="age">Age</Label>
-            <StyledInput
-              type="number"
-              id="age"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              required
-            />
-          </InputGroup>
+          {["income", "loanAmount", "utilization", "missedEMIs", "age"].map(
+            (id) => (
+              <InputGroup key={id}>
+                <Label htmlFor={id}>
+                  {id === "income"
+                    ? "Monthly Income (₹)"
+                    : id === "loanAmount"
+                    ? "Loan Amount (₹)"
+                    : id === "utilization"
+                    ? "Credit Utilization (%)"
+                    : id === "missedEMIs"
+                    ? "Missed EMIs"
+                    : "Age"}
+                </Label>
+                <StyledInput
+                  type="number"
+                  id={id}
+                  name={id}
+                  value={formData[id]}
+                  onChange={handleChange}
+                  required
+                />
+              </InputGroup>
+            )
+          )}
           <CtaButton type="submit" disabled={loading}>
             {loading ? "Predicting..." : "Get Predicted Score"}
           </CtaButton>
@@ -430,9 +377,9 @@ const Dashboard = () => {
             <ResultMessage>
               {result.reason
                 ? `Reason: ${result.reason}`
-                : `Your score is ${getScoreCategory(result.score)}`}
+                : "No detailed explanation available."}
             </ResultMessage>
-            {result.score !== "N/A" && (
+            {typeof result.score === "number" && (
               <ResultScore>{result.score}</ResultScore>
             )}
           </ResultContainer>
@@ -450,7 +397,7 @@ const Dashboard = () => {
           >
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
             <XAxis dataKey="name" stroke="var(--light-text)" />
-            <YAxis stroke="var(--light-text)" />
+            <YAxis stroke="var(--light-text)" domain={[300, 900]} />
             <Tooltip />
             <Bar dataKey="score" fill="var(--primary-blue)" />
           </BarChart>
