@@ -1,54 +1,54 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { ThemeContext } from "styled-components";
-import logo from "../assets/Gemini_Generated_Image_jpb76tjpb76tjpb72.png"; // Import your logo here
+import logo from "../assets/Gemini_Generated_Image_jpb76tjpb76tjpb72.png";
+
+// ===== Styled Components =====
 
 const NavContainer = styled.nav`
-  display: flex;
-  justify-content: center;
   position: sticky;
   top: 0;
   z-index: 1000;
   width: 100%;
-  padding: 20px 50px;
-  background-color: var(--card-background);
-  backdrop-filter: blur(10px);
+  padding: 14px 40px;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 4px 15px var(--box-shadow);
-  font-family: "Montserrat", sans-serif;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
 
   @media (max-width: 768px) {
-    padding: 15px 20px;
+    padding: 10px 20px;
   }
 `;
 
 const NavContent = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 1200px;
 `;
 
 const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  gap: 10px;
 `;
 
 const LogoImage = styled.img`
-  height: 40px;
+  height: 42px;
   transition: transform 0.3s ease;
+
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 24px;
 
   @media (max-width: 768px) {
     display: none;
@@ -59,22 +59,22 @@ const NavLink = styled(Link)`
   color: var(--dark-text);
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.3s ease;
   position: relative;
+  transition: all 0.3s ease;
 
   &:hover {
     color: var(--primary-blue);
-    transform: translateY(-2px);
   }
 
   &::after {
     content: "";
     position: absolute;
-    bottom: -5px;
     left: 0;
-    width: 0;
+    bottom: -4px;
+    width: 0%;
     height: 2px;
-    background-color: var(--primary-blue);
+    background: var(--primary-blue);
+    border-radius: 2px;
     transition: width 0.3s ease;
   }
 
@@ -86,7 +86,7 @@ const NavLink = styled(Link)`
 const NavButtons = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 
   @media (max-width: 768px) {
     display: none;
@@ -94,34 +94,34 @@ const NavButtons = styled.div`
 `;
 
 const ActionButton = styled.button`
-  background-color: var(--primary-blue);
-  border: none;
-  border-radius: 50px;
-  padding: 10px 25px;
+  background: var(--primary-blue);
   color: var(--soft-white);
+  border: none;
+  border-radius: 30px;
+  padding: 8px 22px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 8px var(--box-shadow);
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--secondary-blue);
-    box-shadow: 0 6px 12px var(--box-shadow);
+    background: var(--secondary-blue);
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
   }
 `;
 
 const ProfileIcon = styled(Link)`
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background-color: var(--primary-blue);
-  cursor: pointer;
+  background: var(--primary-blue);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--soft-white);
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -129,32 +129,11 @@ const ProfileIcon = styled(Link)`
   }
 `;
 
-const ThemeToggleButton = styled.button`
-  background-color: var(--card-background);
-  color: var(--dark-text);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px var(--box-shadow);
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: var(--soft-white);
-    transform: rotate(15deg);
-  }
-`;
-
 const Hamburger = styled.div`
   display: none;
-  cursor: pointer;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
+  cursor: pointer;
 
   span {
     height: 3px;
@@ -165,7 +144,7 @@ const Hamburger = styled.div`
   }
 
   &.open span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 6px);
+    transform: rotate(45deg) translate(5px, 5px);
   }
 
   &.open span:nth-child(2) {
@@ -173,7 +152,7 @@ const Hamburger = styled.div`
   }
 
   &.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -6px);
+    transform: rotate(-45deg) translate(5px, -5px);
   }
 
   @media (max-width: 768px) {
@@ -182,46 +161,43 @@ const Hamburger = styled.div`
 `;
 
 const MobileMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
   position: fixed;
   top: 0;
   right: 0;
-  width: 250px;
+  width: 260px;
   height: 100vh;
-  background-color: var(--card-background);
-  box-shadow: -4px 0 10px var(--box-shadow);
-  padding-top: 80px;
+  background: var(--card-background);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.12);
+  padding-top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: center;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(100%)")};
-  transition: transform 0.4s ease-in-out;
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  transition: transform 0.4s ease, opacity 0.4s ease;
   z-index: 999;
 `;
 
 const MobileNavLink = styled(Link)`
+  font-size: 18px;
   color: var(--dark-text);
   text-decoration: none;
-  font-size: 18px;
   font-weight: 500;
-  width: 100%;
-  padding: 10px 0;
-  text-align: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 
   &:hover {
-    background-color: var(--soft-white);
     color: var(--primary-blue);
   }
 `;
 
-const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout, toggleTheme }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const themeContext = useContext(ThemeContext);
+// ===== Component =====
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const profileInitial = "P"; // Replace with user's first letter
+
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   return (
     <NavContainer>
@@ -229,6 +205,7 @@ const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout, toggleTheme }) => {
         <LogoLink to="/">
           <LogoImage src={logo} alt="Cibilize Logo" />
         </LogoLink>
+
         <NavLinks>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
@@ -237,13 +214,11 @@ const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout, toggleTheme }) => {
           <NavLink to="/recommendations">Recommendations</NavLink>
           <NavLink to="/emergency">Emergency</NavLink>
         </NavLinks>
+
         <NavButtons>
-          <ThemeToggleButton onClick={toggleTheme}>
-            {themeContext.mode === "light" ? "🌙" : "☀️"}
-          </ThemeToggleButton>
           {isLoggedIn ? (
             <>
-              <ProfileIcon to="/profile">P</ProfileIcon>
+              <ProfileIcon to="/profile">{profileInitial}</ProfileIcon>
               <ActionButton onClick={onLogout}>Log Out</ActionButton>
             </>
           ) : (
@@ -252,6 +227,7 @@ const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout, toggleTheme }) => {
             </ActionButton>
           )}
         </NavButtons>
+
         <Hamburger
           onClick={toggleMobileMenu}
           className={mobileMenuOpen ? "open" : ""}
@@ -260,37 +236,30 @@ const Navbar = ({ isLoggedIn, onOpenAuthModal, onLogout, toggleTheme }) => {
           <span></span>
           <span></span>
         </Hamburger>
+
         <MobileMenu open={mobileMenuOpen}>
-          <MobileNavLink onClick={toggleMobileMenu} to="/">
-            Home
-          </MobileNavLink>
-          <MobileNavLink onClick={toggleMobileMenu} to="/dashboard">
-            Dashboard
-          </MobileNavLink>
-          <MobileNavLink onClick={toggleMobileMenu} to="/expenses">
-            Expenses
-          </MobileNavLink>
-          <MobileNavLink onClick={toggleMobileMenu} to="/tools">
-            Tools
-          </MobileNavLink>
-          <MobileNavLink onClick={toggleMobileMenu} to="/recommendations">
-            Recommendations
-          </MobileNavLink>
-          <MobileNavLink onClick={toggleMobileMenu} to="/emergency">
-            Emergency
-          </MobileNavLink>
+          {[
+            { label: "Home", to: "/" },
+            { label: "Dashboard", to: "/dashboard" },
+            { label: "Expenses", to: "/expenses" },
+            { label: "Tools", to: "/tools" },
+            { label: "Recommendations", to: "/recommendations" },
+            { label: "Emergency", to: "/emergency" },
+          ].map(({ label, to }) => (
+            <MobileNavLink key={to} onClick={toggleMobileMenu} to={to}>
+              {label}
+            </MobileNavLink>
+          ))}
           {isLoggedIn ? (
-            <>
-              <MobileNavLink
-                onClick={() => {
-                  onLogout();
-                  toggleMobileMenu();
-                }}
-                to="#"
-              >
-                Log Out
-              </MobileNavLink>
-            </>
+            <MobileNavLink
+              onClick={() => {
+                onLogout();
+                toggleMobileMenu();
+              }}
+              to="#"
+            >
+              Log Out
+            </MobileNavLink>
           ) : (
             <MobileNavLink
               onClick={() => {

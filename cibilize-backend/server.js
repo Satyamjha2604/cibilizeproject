@@ -11,6 +11,7 @@ const multer = require("multer");
 const { authenticateToken } = require("./middleware/auth");
 const pdfParse = require("pdf-parse");
 const { parseBankStatement } = require("./utils/pdfParser"); // ✅ For PDF extraction
+const geminiChatRouter = require("./routes/geminiChat");
 
 const app = express();
 const PORT = 5000;
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/gemini", geminiRouter); // ✅ Gemini route (Credit Score Prediction)
+app.use("/api/chat", geminiChatRouter);
 
 // ==================== File Upload (PDF Parsing) ====================
 

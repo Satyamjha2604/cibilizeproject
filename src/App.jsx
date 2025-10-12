@@ -14,11 +14,15 @@ import AuthModal from "./components/AuthModal.jsx";
 import Profile from "./components/Profile.jsx";
 import CreditCardRecommendations from "./components/CreditCardRecommendations.jsx";
 
+// 🧠 Import AI Assistant
+import ChatAssistant from "./components/ChatAssistant.jsx";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authFormType, setAuthFormType] = useState("signup");
   const [theme, setTheme] = useState(lightTheme);
+  const [showChat, setShowChat] = useState(false); // 🧠 toggle chat visibility
 
   // Load saved theme
   useEffect(() => {
@@ -116,6 +120,62 @@ function App() {
             onToggleForm={handleToggleForm}
             onSuccessAuth={handleLogin}
           />
+
+          {/* 🧠 Floating AI Chat Assistant */}
+          <div
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              zIndex: 2000,
+            }}
+          >
+            {showChat ? (
+              <div
+                style={{
+                  position: "relative",
+                  width: "350px",
+                  height: "auto",
+                  backgroundColor: "#fff",
+                  borderRadius: "16px",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                }}
+              >
+                <button
+                  onClick={() => setShowChat(false)}
+                  style={{
+                    position: "absolute",
+                    top: "8px",
+                    right: "10px",
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✖
+                </button>
+                <ChatAssistant />
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowChat(true)}
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "60px",
+                  height: "60px",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                  fontSize: "26px",
+                }}
+              >
+                🤖
+              </button>
+            )}
+          </div>
         </main>
         <Footer />
       </Router>
