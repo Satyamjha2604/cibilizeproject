@@ -1,95 +1,61 @@
-// server.js
+// ==================== Load Environment Variables ====================
 require("dotenv").config();
+
+// ==================== Imports ====================
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
+
+// Local Imports
 const { initializeDatabase } = require("./db");
+
+// Route Imports
 const authRouter = require("./routes/auth");
 const expensesRouter = require("./routes/expenses");
-const geminiRouter = require("./routes/gemini"); // ✅ Correct import
-const multer = require("multer");
-const { authenticateToken } = require("./middleware/auth");
-const pdfParse = require("pdf-parse");
-const { parseBankStatement } = require("./utils/pdfParser"); // ✅ For PDF extraction
+const geminiRouter = require("./routes/gemini");
 const geminiChatRouter = require("./routes/geminiChat");
 
+// ==================== App Setup ====================
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // ==================== Middleware ====================
 app.use(cors());
 app.use(express.json());
 
-// ==================== Routes ====================
+// ==================== API Routes ====================
 app.use("/api/auth", authRouter);
 app.use("/api/expenses", expensesRouter);
-app.use("/api/gemini", geminiRouter); // ✅ Gemini route (Credit Score Prediction)
+app.use("/api/gemini", geminiRouter);
 app.use("/api/chat", geminiChatRouter);
 
-// ==================== File Upload (PDF Parsing) ====================
+// ==================== Health Check ====================
+app.get("/", (req, res) => {
+  res.send("✅ Cibilize Backend is Running Successfully with Neon DB!");
+});
 
-// Use memoryStorage for in-memory file parsing
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Parse uploaded PDF and save extracted expenses
-app.post(
-  "/api/expenses/upload",
-  authenticateToken,
-  upload.single("file"),
-  async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded." });
-    }
-
-    try {
-      // Read PDF buffer directly
-      const data = await pdfParse(req.file.buffer);
-      const rawText = data.text;
-
-      // Extract expense data from text
-      const extractedExpenses = parseBankStatement(rawText);
-
-      // Insert extracted expenses into the database
-      const dbConnection = require("./db").getConnection();
-      const userId = req.user.id;
-
-      for (const expense of extractedExpenses) {
-        await dbConnection.execute(
-          "INSERT INTO expenses (user_id, description, amount, category, date) VALUES (?, ?, ?, ?, ?)",
-          [
-            userId,
-            expense.description,
-            expense.amount,
-            "Other ❓",
-            expense.date,
-          ]
-        );
-      }
-
-      console.log(
-        `✅ Successfully parsed and saved ${extractedExpenses.length} expenses from PDF.`
-      );
-
-      res.json({
-        message: `Successfully parsed and saved ${extractedExpenses.length} expenses from the PDF!`,
-      });
-    } catch (err) {
-      console.error("❌ PDF parsing or saving error:", err);
-      res.status(500).json({
-        message: "Failed to process PDF.",
-        error: err.message,
-      });
-    }
-  }
-);
+// ==================== Global Error Handler ====================
+app.use((err, req, res, next) => {
+  console.error("🔥 Global Error Handler:", err.stack);
+  res.status(500).json({
+    error: "Internal Server Error",
+    details: err.message,
+  });
+});
 
 // ==================== Start Server ====================
 async function startServer() {
-  await initializeDatabase();
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  });
+  try {
+    console.log("🔄 Initializing Neon PostgreSQL database...");
+    await initializeDatabase();
+    console.log("✅ Database initialized successfully!");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at: http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Database initialization failed:", error);
+    process.exit(1);
+  }
 }
 
 startServer();
